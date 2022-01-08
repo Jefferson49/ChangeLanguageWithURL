@@ -1,5 +1,5 @@
 # ChangeLanguageWithURL
-A weebtrees 2.0 module, to change the webtrees language by URL requests  with the language provided as an URL parameter
+A weebtrees 2.0 module to change the webtrees language by URL requests with the language provided as an URL parameter.
 
 The module is especially useful if webtrees is integrated into a content management system (e.g. joomla, www.joomla.org) and the languages need to be aligned between the CMS and webtrees. The purpose of the module is to handover the CMS language to webtrees, using a specific URL parameter. If the module receives the URL parameter, the language in webtrees is changed accordingly.
 
