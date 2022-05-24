@@ -6,4 +6,8 @@ The module is especially useful if webtrees is integrated into a content managem
 **Example URL:**   
 http://SOME_URL/webtrees/index.php?route=SOME_ROUTE&language=LANGUAGE_CODE
 
+**Webtrees version:**   
 The module was developed and tested with webtrees 2.0.19, but also works with later [2.0 and 2.1 versions](https://webtrees.net/download).
+
+**Github repository:**   
+https://github.com/Jefferson49/ChangeLanguageWithURL
