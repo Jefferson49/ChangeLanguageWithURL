@@ -20,11 +20,11 @@
  *
  * ChangeLanguageWithURL
  *
- * A middleware module to change the webtrees language on URL requests 
- * with the language provided as URL parameter
+ * Github repository: https://github.com/Jefferson49/ChangeLanguageWithURL
+ *
+ * A weebtrees(https://webtrees.net) 2.0 custom module  to change the webtrees 
+ * language on URL requests with the language provided as URL parameter
  * 
- * Example URL:
- * http://SOME_URL/webtrees/index.php?route=SOME_ROUTE&language=LANGUAGE_CODE
  */
 
 declare(strict_types=1);
