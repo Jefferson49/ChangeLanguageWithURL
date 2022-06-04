@@ -20,11 +20,11 @@
  *
  * ChangeLanguageWithURL
  *
- * A middleware module to change the webtrees language on URL requests 
- * with the language provided as URL parameter
- * 
- * Example URL:
- * http://SOME_URL/webtrees/index.php?route=SOME_ROUTE&language=LANGUAGE_CODE
+ * Github repository: https://github.com/Jefferson49/ChangeLanguageWithURL
+ *
+ * A weebtrees(https://webtrees.net) 2.0 custom module  to change the webtrees 
+ * language on URL requests with the language provided as URL parameter
+ *  
  */
  
 
@@ -38,47 +38,34 @@ use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
-use Fisharebest\Webtrees\Module\LanguageEnglishUnitedStates;
-use Fisharebest\Webtrees\Module\LanguageGerman;
 use Fisharebest\Webtrees\Module\ModuleLanguageInterface;
 use Fisharebest\Webtrees\Services\ModuleService;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Site;
-use Generator;
+use Fisharebest\Webtrees\View;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use function str_contains;
 
-//For Gedcom export
-use Fisharebest\Webtrees\Auth;
-use Fisharebest\Webtrees\GedcomRecord;
-use Fisharebest\Webtrees\Http\ViewResponseTrait;
-use Fisharebest\Webtrees\Registry;
-use Fisharebest\Webtrees\Services\GedcomExportService;
-use Fisharebest\Webtrees\Tree;
-use Illuminate\Database\Capsule\Manager as DB;
-use League\Flysystem\Filesystem;
-use League\Flysystem\ZipArchive\ZipArchiveAdapter;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
-use RuntimeException;
-use function addcslashes;
-use function app;
-use function assert;
-use function fclose;
-use function fopen;
-use function pathinfo;
-use function rewind;
-use function strtolower;
-use function tmpfile;
+
 
 
 class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterface, MiddlewareInterface {
 
     use ModuleCustomTrait;
-  
+	
+    /**
+     * Initialization.
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
+		// Register a namespace for our views.
+		View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
+	}  
+	
     /**
      * How should this module be identified in the control panel, etc.?
      *
@@ -88,6 +75,32 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
     {
         return 'ChangeLanguageWithURL module';
     }
+
+	/**
+     * Where does this module store its resources
+     *
+     * @return string
+     */
+    public function resourcesFolder(): string
+    {
+		return __DIR__ . '/resources/';
+    }
+
+  	 /**
+     * Show error message in the front end
+     *
+     * @return ResponseInterface
+     */ 
+
+    private function showErrorMessage(string $text): ResponseInterface
+    {		
+       return $this->viewResponse($this->name() . '::error', [
+           'title'        	=> 'Error',
+           'tree'			=> null,
+           'text'  	   	=> I18N::translate('Custom module') . ': ' . $this->name() . '<br><b>'. $text . '</b>',
+       ]);	 
+    }
+
 
     /**
      * Code here is executed before and after we process the request/response.
@@ -103,15 +116,30 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
         // Code here is executed before we process the request/response.
 	
 		$params = $request->getQueryParams();
-		$language = $params['language'] ?? '';
-					
-		if ($language !== '') {
-			I18N::init($language);
-			Session::put('language', $language);
+		$language = $params['language'] ?? '';	
+
+		if ($language != '') {	
+            
+			$locales = I18N::activeLocales();	
+			$language_found = false; 		
+
+			foreach (I18N::activeLocales() as $locale) {
+				if ($locale->languageTag() == $language) {
+					$language_found = true;
+				}
+			}
+
+			if ($language_found) {
+				I18N::init($language);
+				Session::put('language', $language);
+			}
+			else {
+				//Show error message
+                return $this->showErrorMessage(I18N::translate('Requested language tag not found') . ': ' . $language);
+			}		
 		}
-					
-        // Generate the response.
-        return $handler->handle($request);	
-	
+		
+        // Generate the response
+        return $handler->handle($request);		
     }
 }
