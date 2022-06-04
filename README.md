@@ -15,7 +15,7 @@ http://SOME_URL/webtrees/index.php?route=/webtrees/tree/tree1/my-page&language=e
 Copy the folder "download_gedcom_with_url" into the "module_v4" folder of your webtrees installation
 
 **Webtrees version**  
-The module was developed and tested with [webtrees 2.1.14](https://webtrees.net/download)
+The latest release of the module was developed and tested with [webtrees 2.1.14](https://webtrees.net/download), but should also run with any other webtrees 2.0 and 2.1 version.
 
 **Github repository**  
 https://github.com/Jefferson49/ChangeLanguageWithURL
