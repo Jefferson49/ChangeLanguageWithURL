@@ -19,9 +19,6 @@ A [weebtrees](https://webtrees.net) 2.x module to change the webtrees language b
 ## Webtrees version  
 The latest release of the module was developed and tested with [webtrees 2.1.4](https://webtrees.net/download), but should also run with any other webtrees 2.0 and 2.1 version.
 
-## Github repository  
-https://github.com/Jefferson49/ChangeLanguageWithURL
-
 ## URL format  
 http://SOME_URL/webtrees/index.php?route=SOME_ROUTE&language=LANGUAGE_TAG
 
@@ -29,3 +26,6 @@ Example language tags (to use for LANGUAGE_TAG): en-GB, de, fr, es
 
 ## Example URL  
 http://SOME_URL/webtrees/index.php?route=/webtrees/tree/tree1/my-page&language=en-GB
+
+## Github repository  
+https://github.com/Jefferson49/ChangeLanguageWithURL
