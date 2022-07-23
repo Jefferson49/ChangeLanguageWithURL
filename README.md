@@ -12,7 +12,7 @@ A [weebtrees](https://webtrees.net) 2.x module to change the webtrees language b
 Copy the folder "change_language_with_url" into the "module_v4" folder of your webtrees installation.
 
 ## Webtrees version  
-The latest release of the module was developed and tested with [webtrees 2.1.14](https://webtrees.net/download), but should also run with any other webtrees 2.0 and 2.1 version.
+The latest release of the module was developed and tested with [webtrees 2.1.4](https://webtrees.net/download), but should also run with any other webtrees 2.0 and 2.1 version.
 
 ## Github repository  
 https://github.com/Jefferson49/ChangeLanguageWithURL
