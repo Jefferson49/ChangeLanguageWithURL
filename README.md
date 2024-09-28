@@ -9,7 +9,7 @@ A [weebtrees](https://webtrees.net) 2.x custom module to change the webtrees lan
     + The purpose of the module is to handover the CMS language to webtrees using a specific URL parameter. If the module receives the URL parameter, the language in webtrees is changed accordingly
 
 ## Installation  
-+ Download the [latest release](/releases/latest) of the module
++ Download the [latest release](https://github.com/Jefferson49/ChangeLanguageWithURL/releases/latest) of the module
 + Copy the folder "change_language_with_url" into the "module_v4" folder of your webtrees installation
 + Check if the module is activated in the control panel:
     + Login to webtrees as an administrator
