@@ -2,9 +2,13 @@
 
 /**
  * webtrees: online genealogy
- * Copyright (C) 2021 webtrees development team
- * Copyright (C) 2022 Webmaster @ Familienforschung Hemprich, 
+ * Copyright (C) 2024 webtrees development team
+ *                    <http://webtrees.net>
+ *
+ * ChangeLanguageWithURL (webtrees custom module):
+ * Copyright (C) 2024 Markus Hemprich
  *                    <http://www.familienforschung-hemprich.de>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,21 +20,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  *
- *
- *
+ * 
  * ChangeLanguageWithURL
  *
- * Github repository: https://github.com/Jefferson49/ChangeLanguageWithURL
- *
- * A weebtrees(https://webtrees.net) 2.0 custom module  to change the webtrees 
- * language on URL requests with the language provided as URL parameter
- * 
- */
+ * A webtrees 2.1/2.2 custom module to change the webtrees language 
+ * by URL requests with the language provided as an URL parameter.
+ *  
+ */ 
 
 declare(strict_types=1);
 
-namespace ChangeLanguageWithURLNamespace;
+namespace Jefferson49\Webtrees\Module\ChangeLanguageWithURL;
 
-require __DIR__ . '/ChangeLanguageWithURL.php';
+use Composer\Autoload\ClassLoader;
+
+$loader = new ClassLoader();
+$loader->addPsr4('Jefferson49\\Webtrees\\Module\\ChangeLanguageWithURL\\', __DIR__);
+$loader->register();
 
 return new ChangeLanguageWithURL();

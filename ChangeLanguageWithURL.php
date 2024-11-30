@@ -2,9 +2,13 @@
 
 /**
  * webtrees: online genealogy
- * Copyright (C) 2021 webtrees development team
- * Copyright (C) 2022 Webmaster @ Familienforschung Hemprich, 
+ * Copyright (C) 2024 webtrees development team
+ *                    <http://webtrees.net>
+ *
+ * ChangeLanguageWithURL (webtrees custom module):
+ * Copyright (C) 2024 Markus Hemprich
  *                    <http://www.familienforschung-hemprich.de>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -16,45 +20,51 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  *
- *
- *
+ * 
  * ChangeLanguageWithURL
  *
- * Github repository: https://github.com/Jefferson49/ChangeLanguageWithURL
- *
- * A weebtrees(https://webtrees.net) 2.0 custom module  to change the webtrees 
- * language on URL requests with the language provided as URL parameter
+ * A webtrees 2.1/2.2 custom module to change the webtrees language 
+ * by URL requests with the language provided as an URL parameter.
  *  
- */
- 
+ */ 
 
 declare(strict_types=1);
 
-namespace ChangeLanguageWithURLNamespace;
+namespace Jefferson49\Webtrees\Module\ChangeLanguageWithURL;
 
-use Fisharebest\Localization\Locale;
-use Fisharebest\Localization\Locale\LocaleInterface;
+use Fig\Http\Message\StatusCodeInterface;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
-use Fisharebest\Webtrees\Module\ModuleLanguageInterface;
-use Fisharebest\Webtrees\Services\ModuleService;
+use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
-use Fisharebest\Webtrees\Site;
 use Fisharebest\Webtrees\View;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 
-
-
 class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterface, MiddlewareInterface {
 
     use ModuleCustomTrait;
-	
+
+	//Custom module version
+	public const CUSTOM_VERSION = '1.0.1';
+
+    //Github repository
+	public const GITHUB_REPO = 'Jefferson49/ChangeLanguageWithURL';
+
+	//Github API URL to get the information about the latest releases
+	public const GITHUB_API_LATEST_VERSION = 'https://api.github.com/repos/'. self::GITHUB_REPO . '/releases/latest';
+	public const GITHUB_API_TAG_NAME_PREFIX = '"tag_name":"v';
+
+	//Author of custom module
+	public const CUSTOM_AUTHOR = 'Markus Hemprich';
+
     /**
      * Initialization.
      *
@@ -84,6 +94,93 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
     public function resourcesFolder(): string
     {
 		return __DIR__ . '/resources/';
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return string
+     *
+     * @see \Fisharebest\Webtrees\Module\ModuleCustomInterface::customModuleAuthorName()
+     */
+    public function customModuleAuthorName(): string
+    {
+        return self::CUSTOM_AUTHOR;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return string
+     *
+     * @see \Fisharebest\Webtrees\Module\ModuleCustomInterface::customModuleVersion()
+     */
+    public function customModuleVersion(): string
+    {
+        return self::CUSTOM_VERSION;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return string
+     *
+     * @see \Fisharebest\Webtrees\Module\ModuleCustomInterface::customModuleLatestVersion()
+     */
+    public function customModuleLatestVersion(): string
+    {
+        // No update URL provided.
+        if (self::GITHUB_API_LATEST_VERSION === '') {
+            return $this->customModuleVersion();
+        }
+        return Registry::cache()->file()->remember(
+            $this->name() . '-latest-version',
+            function (): string {
+                try {
+                    $client = new Client(
+                        [
+                        'timeout' => 3,
+                        ]
+                    );
+
+                    $response = $client->get(self::GITHUB_API_LATEST_VERSION);
+
+                    if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
+                        $content = $response->getBody()->getContents();
+                        preg_match_all('/' . self::GITHUB_API_TAG_NAME_PREFIX . '\d+\.\d+\.\d+/', $content, $matches, PREG_OFFSET_CAPTURE);
+
+						if(!empty($matches[0]))
+						{
+							$version = $matches[0][0][0];
+							$version = substr($version, strlen(self::GITHUB_API_TAG_NAME_PREFIX));	
+						}
+						else
+						{
+							$version = $this->customModuleVersion();
+						}
+
+                        return $version;
+                    }
+                } catch (GuzzleException $ex) {
+                    // Can't connect to the server?
+                }
+
+                return $this->customModuleVersion();
+            },
+            86400
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return string
+     *
+     * @see \Fisharebest\Webtrees\Module\ModuleCustomInterface::customModuleSupportUrl()
+     */
+    public function customModuleSupportUrl(): string
+    {
+        return 'https://github.com/' . self::GITHUB_REPO;
     }
 
   	 /**

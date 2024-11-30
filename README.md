@@ -1,5 +1,9 @@
+[![Latest Release](https://img.shields.io/github/v/release/Jefferson49/ChangeLanguageWithURL?display_name=tag)](https://github.com/Jefferson49/ChangeLanguageWithURL/releases/latest)
+[![webtrees major version](https://img.shields.io/badge/webtrees-v2.1.x-green)](https://webtrees.net/download)
+[![webtrees major version](https://img.shields.io/badge/webtrees-v2.2.x-green)](https://webtrees.net/download)
+
 ## ChangeLanguageWithURL
-A [weebtrees](https://webtrees.net) 2.1 custom module to change the webtrees language by URL requests with the language provided as an URL parameter.
+A [weebtrees](https://webtrees.net) 2.1/2.2 custom module to change the webtrees language by URL requests with the language provided as an URL parameter.
 
 ## What are the benefits of this module?
 + Change the webtrees language without interaction in the user interface (webtrees front end)
@@ -17,15 +21,28 @@ A [weebtrees](https://webtrees.net) 2.1 custom module to change the webtrees lan
 	+ Check if it has a tick for "Enabled"
 
 ## Webtrees version  
-The latest release of the module was developed and tested with [webtrees 2.1.4](https://webtrees.net/download), but should also run with any other webtrees 2.1 versions.
+The latest release of the module was developed and tested with [webtrees 2.1.21 and 2.2.0](https://webtrees.net/download), but should also run with any other webtrees 2.1/2.2 versions.
 
-## URL format  
-http://SOME_URL/webtrees/index.php?route=SOME_ROUTE&language=LANGUAGE_TAG
+## URL parameters to specify the language
+In general, the module allows to add the language as a parameter to the end of the URL. The format for the parameter is as follows:
+```HTML
+language=LANGUAGE_TAG
+```
++ with LANGUAGE_TAG = en-GB, de, fr, es, ...
++ The available language tags in webtrees can be found within the [supported webtrees languages](https://github.com/fisharebest/webtrees/tree/main/resources/lang)
 
-Example language tags (to use for LANGUAGE_TAG): en-GB, de, fr, es
+## URL format and Example URLs
+Depending on the URL, the URL parameter for the language **needs to be added with a "&" or a "?" character**.
 
-## Example URL  
-http://SOME_URL/webtrees/index.php?route=/webtrees/tree/tree1/my-page&language=en-GB
+If the language to be added is the first URL parameter, it needs to be added with a "**?**" character:
+```HTML
+https://MY_SITE/webtrees/tree/MY_TREE/search-general?language=en-GB
+```
+
+If the language to be added is not the first URL parameter (i.e. another parameter with a "?" character is used before), it needs to be added with a "**&**" character:
+```HTML
+https://MY_SITE/webtrees/index.php?route=%2Ftree%2FMY_TREE%2Fsearch-general&language=es
+```
 
 ## Bugs and Feature Requests
 If you experience any bugs or have a feature request for this webtrees custom module, you can [create a new issue](https://github.com/Jefferson49/ChangeLanguageWithURL/issues).
