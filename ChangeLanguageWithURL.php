@@ -53,7 +53,7 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
     use ModuleCustomTrait;
 
 	//Custom module version
-	public const CUSTOM_VERSION = '1.0.1';
+	public const CUSTOM_VERSION = '1.1.0';
 
     //Github repository
 	public const GITHUB_REPO = 'Jefferson49/ChangeLanguageWithURL';
