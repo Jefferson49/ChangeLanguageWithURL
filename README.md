@@ -50,6 +50,11 @@ If the language to be added is not the first URL parameter (i.e. another paramet
 https://MY_SITE/webtrees/index.php?route=%2Ftree%2FMY_TREE%2Fsearch-general&language=es
 ```
 
+If both the language and the language after signout shall be changed in parallel, two URL parameters can be added:
+```HTML
+https://MY_SITE/webtrees/index.php?route=%2Ftree%2FMY_TREE%2Fsearch-general&language=es&language_after_signout=fr
+```
+
 ## Bugs and Feature Requests
 If you experience any bugs or have a feature request for this webtrees custom module, you can [create a new issue](https://github.com/Jefferson49/ChangeLanguageWithURL/issues).
 
@@ -57,9 +62,9 @@ If you experience any bugs or have a feature request for this webtrees custom mo
 + [GNU General Public License, Version 3](LICENSE.md)
 + webtrees
     + webtrees: online genealogy
-    + Copyright (C) 2024 [webtrees development team](http://webtrees.net)
+    + Copyright (C) 2025 [webtrees development team](http://webtrees.net)
 + ChangeLanguageWithURL (webtrees custom module)
-    + Copyright (C) 2024 [Jefferson49](https://github.com/Jefferson49)
+    + Copyright (C) 2025 [Jefferson49](https://github.com/Jefferson49)
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 

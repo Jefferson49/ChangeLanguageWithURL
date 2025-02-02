@@ -27,11 +27,17 @@
  * by URL requests with the language provided as an URL parameter.
  *  
  */ 
-
+ 
 declare(strict_types=1);
 
 namespace Jefferson49\Webtrees\Module\ChangeLanguageWithURL;
- 
- 
-if (!require_once __DIR__ . '/autoload.php') return null;
-return new ChangeLanguageWithURL();
+
+use Composer\Autoload\ClassLoader;
+
+
+//Autoload this webtrees custom module
+$loader = new ClassLoader(__DIR__);
+$loader->addPsr4('Jefferson49\\Webtrees\\Module\\ChangeLanguageWithURL\\', __DIR__);
+$loader->register();
+
+return true;
