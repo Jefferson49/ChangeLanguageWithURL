@@ -33,12 +33,14 @@ declare(strict_types=1);
 namespace Jefferson49\Webtrees\Module\ChangeLanguageWithURL;
 
 use Fig\Http\Message\StatusCodeInterface;
+use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
+use Fisharebest\Webtrees\Site;
 use Fisharebest\Webtrees\View;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -198,6 +200,25 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
        ]);	 
     }
 
+  	/**
+     * Whether a language tag belongs to an active language
+     * 
+     * @param string $language_tag
+     *
+     * @return bool
+     */ 
+    public static function isActiveLanguage(string $language_tag): bool 
+    {
+        $language_found = false;
+
+        foreach (I18N::activeLocales() as $locale) {
+            if ($locale->languageTag() === $language_tag) {
+                $language_found = true;
+                break;
+            }
+        }
+        return $language_found;
+     } 
 
     /**
      * Code here is executed before and after we process the request/response.
@@ -210,33 +231,47 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        // Code here is executed before we process the request/response.
-	
-		$params = $request->getQueryParams();
-		$language = $params['language'] ?? '';	
+		$params                 = $request->getQueryParams();
+		$language               = $params['language'] ?? '';
+		$language_after_signout = $params['language_after_signout'] ?? '';
 
-		if ($language != '') {	
+		if ($language_after_signout === 'reset') {
+
+            Site::setPreference('LANGUAGE_AFTER_SIGNOUT', '');
+            $language_after_signout = '';
+        }        
+		elseif ($language_after_signout !== '') {	
             
-			$locales = I18N::activeLocales();	
-			$language_found = false; 		
+			if (self::isActiveLanguage($language_after_signout)) {
+				Site::setPreference('LANGUAGE_AFTER_SIGNOUT', $language_after_signout);
+            }
+			else {
+				//Show error message
+                return $this->showErrorMessage(I18N::translate('Requested language tag not found') . ': ' . $language_after_signout);
+			}		
+		}
 
-			foreach (I18N::activeLocales() as $locale) {
-				if ($locale->languageTag() == $language) {
-					$language_found = true;
-				}
-			}
+        //Set language after sign out
+        if(!Auth::check() && Site::getPreference('LANGUAGE_AFTER_SIGNOUT') !== '') {
 
-			if ($language_found) {
+            Session::put('language', Site::getPreference('LANGUAGE_AFTER_SIGNOUT'));
+            return $handler->handle($request);		
+        }
+
+        //Set language
+		if ($language !== '') {	
+            
+			if (self::isActiveLanguage($language)) {
+
 				I18N::init($language);
 				Session::put('language', $language);
-			}
+            }
 			else {
 				//Show error message
                 return $this->showErrorMessage(I18N::translate('Requested language tag not found') . ': ' . $language);
 			}		
 		}
-		
-        // Generate the response
+
         return $handler->handle($request);		
     }
 }

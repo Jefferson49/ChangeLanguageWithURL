@@ -24,12 +24,18 @@ A [weebtrees](https://webtrees.net) 2.1/2.2 custom module to change the webtrees
 The latest release of the module was developed and tested with [webtrees 2.1.21 and 2.2.0](https://webtrees.net/download), but should also run with any other webtrees 2.1/2.2 versions.
 
 ## URL parameters to specify the language
-In general, the module allows to add the language as a parameter to the end of the URL. The format for the parameter is as follows:
+In general, the module allows to add the language and the language after sign out as parameters to the end of the URL. The format for the URL parameters is as follows:
 ```HTML
 language=LANGUAGE_TAG
+
+language_after_signout=LANGUAGE_TAG|reset
 ```
 + with LANGUAGE_TAG = en-GB, de, fr, es, ...
 + The available language tags in webtrees can be found within the [supported webtrees languages](https://github.com/fisharebest/webtrees/tree/main/resources/lang)
++ With the following URL parameter, the language after sign out can be reset to the default, where webtrees selects the browser language after sign out:
+```HTML
+language_after_signout=reset
+```
 
 ## URL format and Example URLs
 Depending on the URL, the URL parameter for the language **needs to be added with a "&" or a "?" character**.
