@@ -236,9 +236,7 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
 		$language_after_signout = $params['language_after_signout'] ?? '';
 
 		if ($language_after_signout === 'reset') {
-
             Site::setPreference('LANGUAGE_AFTER_SIGNOUT', '');
-            $language_after_signout = '';
         }        
 		elseif ($language_after_signout !== '') {	
             
