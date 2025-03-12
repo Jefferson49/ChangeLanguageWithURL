@@ -253,7 +253,6 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
         if(!Auth::check() && Site::getPreference('LANGUAGE_AFTER_SIGNOUT') !== '') {
 
             Session::put('language', Site::getPreference('LANGUAGE_AFTER_SIGNOUT'));
-            return $handler->handle($request);		
         }
 
         //Set language
