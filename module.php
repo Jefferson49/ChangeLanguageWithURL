@@ -31,7 +31,8 @@
 declare(strict_types=1);
 
 namespace Jefferson49\Webtrees\Module\ChangeLanguageWithURL;
- 
- 
-if (!require_once __DIR__ . '/autoload.php') return null;
+
+
+require_once __DIR__ . '/autoload.php';
+
 return new ChangeLanguageWithURL();
