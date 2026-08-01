@@ -41,6 +41,7 @@ use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Site;
 use Fisharebest\Webtrees\View;
+use Fisharebest\Webtrees\Webtrees;
 use Jefferson49\Webtrees\Exceptions\GithubCommunicationError;
 use Jefferson49\Webtrees\Helpers\GithubService;
 use Psr\Http\Message\ResponseInterface;
@@ -183,6 +184,10 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
      */ 
     public static function isActiveLanguage(string $language_tag): bool 
     {
+        if (version_compare(Webtrees::VERSION, '2.2.6', '>')) {
+            return array_key_exists($language_tag, I18N::activeLanguages());
+        }
+
         $language_found = false;
 
         foreach (I18N::activeLocales() as $locale) {
