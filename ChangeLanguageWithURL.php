@@ -36,14 +36,12 @@ use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
-use Fisharebest\Webtrees\Module\ModuleCustomTrait;
-use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Session;
 use Fisharebest\Webtrees\Site;
 use Fisharebest\Webtrees\View;
 use Fisharebest\Webtrees\Webtrees;
-use Jefferson49\Webtrees\Exceptions\GithubCommunicationError;
-use Jefferson49\Webtrees\Helpers\GithubService;
+use Jefferson49\Webtrees\Helpers\Functions;
+use Jefferson49\Webtrees\Module\ModuleCustomTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -60,10 +58,6 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
     //Github repository
 	public const GITHUB_REPO = 'Jefferson49/ChangeLanguageWithURL';
 
-	//Github API URL to get the information about the latest releases
-	public const GITHUB_API_LATEST_VERSION = 'https://api.github.com/repos/'. self::GITHUB_REPO . '/releases/latest';
-	public const GITHUB_API_TAG_NAME_PREFIX = '"tag_name":"v';
-
 	//Author of custom module
 	public const CUSTOM_AUTHOR = 'Markus Hemprich';
 
@@ -74,6 +68,10 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
      */
     public function boot(): void
     {
+        //Register this class in the webtrees container
+        //This allows to access the module instance from other places, e.g. views/scripts (->assetUrl)
+        Functions::registerInContainer(self::class, $this);
+                
 		// Register a namespace for our views.
 		View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
 	}  
@@ -88,78 +86,6 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
         return 'ChangeLanguageWithURL module';
     }
 
-	/**
-     * Where does this module store its resources
-     *
-     * @return string
-     */
-    public function resourcesFolder(): string
-    {
-		return __DIR__ . '/resources/';
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return string
-     *
-     * @see \Fisharebest\Webtrees\Module\ModuleCustomInterface::customModuleAuthorName()
-     */
-    public function customModuleAuthorName(): string
-    {
-        return self::CUSTOM_AUTHOR;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return string
-     *
-     * @see \Fisharebest\Webtrees\Module\ModuleCustomInterface::customModuleVersion()
-     */
-    public function customModuleVersion(): string
-    {
-        return self::CUSTOM_VERSION;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return string
-     *
-     * @see \Fisharebest\Webtrees\Module\ModuleCustomInterface::customModuleLatestVersion()
-     */
-    public function customModuleLatestVersion(): string
-    {
-        return Registry::cache()->file()->remember(
-            $this->name() . '-latest-version',
-            function (): string {
-
-                try {
-                    //Get latest release from GitHub
-                    return GithubService::getLatestReleaseTag(self::GITHUB_REPO);
-                }
-                catch (GithubCommunicationError $ex) {
-                    // Can't connect to GitHub?
-                    return $this->customModuleVersion();
-                }
-            },
-            86400
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return string
-     *
-     * @see \Fisharebest\Webtrees\Module\ModuleCustomInterface::customModuleSupportUrl()
-     */
-    public function customModuleSupportUrl(): string
-    {
-        return 'https://github.com/' . self::GITHUB_REPO;
-    }
-
   	 /**
      * Show error message in the front end
      *
@@ -169,9 +95,9 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
     private function showErrorMessage(string $text): ResponseInterface
     {		
        return $this->viewResponse($this->name() . '::error', [
-           'title'        	=> 'Error',
-           'tree'			=> null,
-           'text'  	   	=> I18N::translate('Custom module') . ': ' . $this->name() . '<br><b>'. $text . '</b>',
+           'title' => 'Error',
+           'tree'  => null,
+           'text'  => I18N::translate('Custom module') . ': ' . $this->name() . '<br><b>'. $text . '</b>',
        ]);	 
     }
 
