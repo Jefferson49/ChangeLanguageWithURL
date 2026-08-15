@@ -73,7 +73,7 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
         Functions::registerInContainer(self::class, $this);
                 
 		// Register a namespace for our views.
-		View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
+		View::registerNamespace(self::viewsNamespace(), $this->resourcesFolder() . 'views/');
 	}  
 	
     /**
