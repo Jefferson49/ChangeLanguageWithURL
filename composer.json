@@ -1,4 +1,24 @@
 {
+    "name": "jefferson49/changelanguagewithurl",
+    "description": "A webtrees custom module to change the webtrees language by URL requests with the language provided as an URL parameter.",
+    "license": [
+        "GPL-3.0-or-later"
+    ],
+    "keywords": [
+        "webtrees",
+        "custom module"
+    ],
+    "authors": [
+        {
+            "name": "Markus Hemprich",
+            "homepage": "https://github.com/jefferson49",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://github.com/jefferson49/changelanguagewithurl",
+    "support": {
+        "issues": "https://github.com/jefferson49/changelanguagewithurl/issues"
+    },
     "repositories": [
         {
             "url": "https://github.com/Jefferson49/webtrees-common.git",
@@ -6,6 +26,13 @@
         }
     ],
     "require": {
+        "php": ">=7.4",
         "jefferson49/webtrees-common": ">=1.2.42"
+    },
+    "conflict": {
+        "fisharebest/webtrees": "<2.1"
+    },
+    "config": {
+        "prepend-autoloader": false
     }
 }
