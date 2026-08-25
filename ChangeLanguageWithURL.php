@@ -110,7 +110,7 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
      */ 
     public static function isActiveLanguage(string $language_tag): bool 
     {
-        if (version_compare(Webtrees::VERSION, '2.2.6', '>')) {
+        if (version_compare(Webtrees::VERSION, '2.3', '>=')) {
             return array_key_exists($language_tag, I18N::activeLanguages());
         }
 
