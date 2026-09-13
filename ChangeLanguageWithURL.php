@@ -20,13 +20,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  *
- * 
+ *
  * ChangeLanguageWithURL
  *
- * A webtrees 2.1/2.2 custom module to change the webtrees language 
+ * A webtrees 2.1/2.2 custom module to change the webtrees language
  * by URL requests with the language provided as an URL parameter.
- *  
- */ 
+ *
+ */
 
 declare(strict_types=1);
 
@@ -61,21 +61,33 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
 	//Author of custom module
 	public const CUSTOM_AUTHOR = 'Markus Hemprich';
 
+
     /**
-     * Initialization.
+     * Constructor
+     */
+    public function __construct()
+    {
+        //Caution: Do not use the shared library jefferson47/webtrees-common within __construct(),
+        //         because it might result in wrong autoload behavior
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * @return void
+     *
+     * @see \Fisharebest\Webtrees\Module\AbstractModule::boot()
      */
     public function boot(): void
     {
         //Register this class in the webtrees container
         //This allows to access the module instance from other places, e.g. views/scripts (->assetUrl)
         Functions::registerInContainer(self::class, $this);
-                
+
 		// Register a namespace for our views.
 		View::registerNamespace(self::viewsNamespace(), $this->resourcesFolder() . 'views/');
-	}  
-	
+	}
+
     /**
      * How should this module be identified in the control panel, etc.?
      *
@@ -90,25 +102,25 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
      * Show error message in the front end
      *
      * @return ResponseInterface
-     */ 
+     */
 
     private function showErrorMessage(string $text): ResponseInterface
-    {		
+    {
        return $this->viewResponse($this->name() . '::error', [
            'title' => 'Error',
            'tree'  => null,
            'text'  => I18N::translate('Custom module') . ': ' . $this->name() . '<br><b>'. $text . '</b>',
-       ]);	 
+       ]);
     }
 
   	/**
      * Whether a language tag belongs to an active language
-     * 
+     *
      * @param string $language_tag
      *
      * @return bool
-     */ 
-    public static function isActiveLanguage(string $language_tag): bool 
+     */
+    public static function isActiveLanguage(string $language_tag): bool
     {
         if (version_compare(Webtrees::VERSION, '2.3', '>=')) {
             return array_key_exists($language_tag, I18N::activeLanguages());
@@ -123,7 +135,7 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
             }
         }
         return $language_found;
-     } 
+     }
 
     /**
      * Code here is executed before and after we process the request/response.
@@ -142,16 +154,16 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
 
 		if ($language_after_signout === 'reset') {
             Site::setPreference('LANGUAGE_AFTER_SIGNOUT', '');
-        }        
-		elseif ($language_after_signout !== '') {	
-            
+        }
+		elseif ($language_after_signout !== '') {
+
 			if (self::isActiveLanguage($language_after_signout)) {
 				Site::setPreference('LANGUAGE_AFTER_SIGNOUT', $language_after_signout);
             }
 			else {
 				//Show error message
                 return $this->showErrorMessage(I18N::translate('Requested language tag not found') . ': ' . $language_after_signout);
-			}		
+			}
 		}
 
         //Set language after sign out
@@ -161,8 +173,8 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
         }
 
         //Set language
-		if ($language !== '') {	
-            
+		if ($language !== '') {
+
 			if (self::isActiveLanguage($language)) {
 
 				I18N::init($language);
@@ -171,9 +183,9 @@ class ChangeLanguageWithURL extends AbstractModule implements ModuleCustomInterf
 			else {
 				//Show error message
                 return $this->showErrorMessage(I18N::translate('Requested language tag not found') . ': ' . $language);
-			}		
+			}
 		}
 
-        return $handler->handle($request);		
+        return $handler->handle($request);
     }
 }
