@@ -34,8 +34,8 @@ namespace Jefferson49\Webtrees\Module\ChangeLanguageWithURL;
 
 use Composer\Autoload\ClassLoader;
 
+
 //Autoload the latest version of the common code library, which is shared between webtrees custom modules
-//Caution: This autoload needs to be executed before autoloading any other libraries from __DIR__/vendor
 require_once __DIR__ . '/vendor/jefferson49/webtrees-common/autoload.php';
 
 //Autoload this webtrees custom module
